@@ -1,7 +1,7 @@
 import {
     Given,
     When,
-    Then,
+    Then
   } from "@cucumber/cucumber";
 
   import { Page, Browser, chromium, expect } from "@playwright/test";
@@ -9,35 +9,41 @@ import {
   let browser: Browser;
   let page: Page;
 
-  Given('A web browser is at the saucelabs login page', async function () {
+  Given('que un navegador web está en la página de inicio de sesión de saucelabs', async function () {
     // Add this to the launch options to run the tests in headless mode: {headless: false}
-    browser = await chromium.launch({headless: false});
+    browser = await chromium.launch({headless: false ,slowMo: 500 });
     page = await browser.newPage();
     await page.goto('https://www.saucedemo.com/');
   });
-
-  When('A user enters the username {string}, the password {string}, and clicks on the login button', async function (username: string, password: string) {
+  When('un usuario ingresa el nombre de usuario {string}, la contraseña {string} y hace clic en el botón de inicio de sesión', async function (username: string, password: string) {
     await page.fill('input[data-test="username"]', username);
     await page.fill('input[data-test="password"]', password);
     await page.click('input[data-test="login-button"]');
   }); 
 
-  Then('the url will contains the inventory subdirectory', async function () {
-    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');
+  Then('la URL contendrá el subdirectory', async function () {
+    await expect(page).toHaveURL('https://www.saucedemo.com/inventory.html');});
     
-  // ✅ NUEVO
+  Then('agrego al carrito', async function () {
   await page.click('button[data-test="add-to-cart-sauce-labs-backpack"]');
 
   // ✅ NUEVO
   await expect(page.locator('.shopping_cart_badge')).toHaveText('1');
-
   
 // ✅ click en carrito (icono arriba a la derecha)
   await page.click('.shopping_cart_link');
-
+  
   // ✅ click en Checkout
   await page.click('button[data-test="checkout"]');
 
+
+
+
+  });
+
+
+  Then('lleno Formulario', async function () {
+  
   // ✅ llenar formulario
   await page.fill('input[data-test="firstName"]', 'Aldo');
   await page.fill('input[data-test="lastName"]', 'QA');
@@ -51,8 +57,10 @@ import {
 
   // ✅ validación final (compra completada)
   await expect(page.locator('.complete-header')).toHaveText('Thank you for your order!');
+ 
+  await browser.close();
+  });
 
   
-    await browser.close();
-  });
+   
  
